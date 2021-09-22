@@ -52,7 +52,7 @@ public class MovieAdaptor extends RecyclerView.Adapter<MovieAdaptor.MovieViewHol
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         holder.movieName.setText(movieDataList.get(position).name);
         holder.movieIcon.setImageResource(movieDataList.get(position).mapGenreToId());
-        holder.movieRating.setText(movieDataList.get(position).rating);
+        holder.movieRating.setText(movieDataList.get(position).userRating);
         holder.movieYear.setText(movieDataList.get(position).year);
     }
 

@@ -1,7 +1,5 @@
 package dk.au.mad21fall.assignment1.au535993.ListActivity.Models;
 
-import java.time.Year;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +7,8 @@ import dk.au.mad21fall.assignment1.au535993.R;
 
 public class MovieData {
 
-    public String name,genre, plot, year, rating;
+    public String name,genre, plot, year, rating, notes, userRating;
+    public String position;
 
     Map<String, Integer> genreMapping;
 
@@ -19,6 +18,8 @@ public class MovieData {
         this.plot = plot;
         this.year = year;
         this.rating = rating;
+        this.userRating = "XX";
+        this.notes = "";
 
         genreMapping = new HashMap<String, Integer>();
         loadMappingScheme();
