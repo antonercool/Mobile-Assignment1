@@ -1,7 +1,12 @@
 package dk.au.mad21fall.assignment1.au535993.ListActivity.DataLoader;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -10,6 +15,18 @@ import java.util.ArrayList;
 import dk.au.mad21fall.assignment1.au535993.ListActivity.Models.MovieData;
 
 public class MovieDataLoader {
+
+    public static MovieData loadDataFromIntent(Intent intent, String contantId){
+        JSONObject movieDataInJson = null;
+        MovieData movieData = null;
+        try {
+            movieDataInJson = new JSONObject(intent.getStringExtra(contantId));
+            movieData = MovieDataJsonWriter.convertJsonToMovieData(movieDataInJson);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return movieData;
+    }
 
     public ArrayList<MovieData> loadMovieData(Context context) {
         // load csv files and parse

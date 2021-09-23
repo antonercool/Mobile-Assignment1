@@ -6,4 +6,10 @@
     <string name="userNotes">User Notes</string>
     <string name="buttonBack">Back</string>
     <string name="RateButton">Rate</string>
+    <string name="myNotes">My notes</string>
+    <string name="cancel">Cancel</string>
+    <string name="okButton">OK</string>
+    <string name="year">Year</string>
+    <string name="Genre">Genre</string>
+    <string name="notes">Notes</string>
 </resources>

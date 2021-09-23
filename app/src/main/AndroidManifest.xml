@@ -10,19 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Au535993">
         <activity
+            android:name=".EditActivity.EditActivity"
+            android:exported="true" />
+        <activity
             android:name=".DetailsActivity.DetailsActivity"
             android:exported="true" />
         <activity
             android:name=".ListActivity.MovieListActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

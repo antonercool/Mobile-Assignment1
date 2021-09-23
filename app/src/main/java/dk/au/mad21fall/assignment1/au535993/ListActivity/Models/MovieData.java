@@ -18,15 +18,15 @@ public class MovieData {
         this.plot = plot;
         this.year = year;
         this.rating = rating;
-        this.userRating = "XX";
+        this.userRating = "X.X";
         this.notes = "";
 
-        genreMapping = new HashMap<String, Integer>();
         loadMappingScheme();
     }
 
     private void loadMappingScheme()
     {
+        genreMapping = new HashMap<String, Integer>();
         genreMapping.put("Action", R.drawable.ic_action);
         genreMapping.put("Comedy", R.drawable.ic_comedy);
         genreMapping.put("Drama", R.drawable.ic_drama);

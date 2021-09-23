@@ -4,7 +4,10 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,10 +19,13 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import dk.au.mad21fall.assignment1.au535993.DetailsActivity.DetailsActivity;
-import dk.au.mad21fall.assignment1.au535993.IntentConstants;
+import dk.au.mad21fall.assignment1.au535993.ListActivity.Models.MultipleMovieDataViewModel;
+import dk.au.mad21fall.assignment1.au535993.ListActivity.Models.SingleMovieDataViewModel;
+import dk.au.mad21fall.assignment1.au535993.Utils.IntentConstants;
 import dk.au.mad21fall.assignment1.au535993.ListActivity.DataLoader.MovieDataJsonWriter;
 import dk.au.mad21fall.assignment1.au535993.ListActivity.DataLoader.MovieDataLoader;
 import dk.au.mad21fall.assignment1.au535993.ListActivity.Models.MovieData;
@@ -36,7 +42,7 @@ public class MovieListActivity extends AppCompatActivity  implements IMovieItemC
     private MovieAdaptor movieAdaptor;
 
     private MovieDataLoader movieDataLoader;
-    private ArrayList<MovieData> movieDataList;
+    private MultipleMovieDataViewModel vm;
 
     // Details launcher
     ActivityResultLauncher<Intent> detailActivityLauncher = registerForActivityResult(
@@ -56,15 +62,24 @@ public class MovieListActivity extends AppCompatActivity  implements IMovieItemC
 
         // LoadData data from .csv and parse to movieData objects
         movieDataLoader = new MovieDataLoader();
-        movieDataList = movieDataLoader.loadMovieData(this);
-        // update the movieDataList with the newly loaded data
-        movieAdaptor.updateMovieList(movieDataList);
+        ArrayList<MovieData> movieDataList = movieDataLoader.loadMovieData(this);
+
+        // only created once, until destroyed
+        vm = new ViewModelProvider(this).get(MultipleMovieDataViewModel.class);
+        vm.createMovieData(movieDataList);
+        vm.getMovieData().observe(this, new Observer<ArrayList<MovieData>>() {
+            @Override
+            public void onChanged(ArrayList<MovieData> movieDataArrayList) {
+                movieAdaptor.updateMovieList(vm.getMovieData().getValue());
+            }
+        });
     }
+
 
     @Override
     public void onMovieItemClicked(int index) {
         // open new details activity
-        MovieData clickedObject = movieDataList.get(index);
+        MovieData clickedObject = vm.getMovieData().getValue().get(index);
         clickedObject.position = String.valueOf(index);
         JSONObject jsonObject = MovieDataJsonWriter.convertMovieDataToJson(clickedObject);
 
@@ -86,7 +101,7 @@ public class MovieListActivity extends AppCompatActivity  implements IMovieItemC
                     JSONObject movieDataInJson = new JSONObject(data.getStringExtra(IntentConstants.DETAILS));
                     MovieData newMovieData = MovieDataJsonWriter.convertJsonToMovieData(movieDataInJson);
                     // update movieData in list
-                    movieDataList.set(Integer.parseInt(newMovieData.position),newMovieData);
+                    vm.updateMovieDataElement(newMovieData);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
