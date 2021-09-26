@@ -15,6 +15,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +42,7 @@ public class MovieListActivity extends AppCompatActivity  implements IMovieItemC
     private RecyclerView recyclerView;
     // adaptor
     private MovieAdaptor movieAdaptor;
+    private Button exitButton;
 
     private MovieDataLoader movieDataLoader;
     private MultipleMovieDataViewModel vm;
@@ -55,24 +58,34 @@ public class MovieListActivity extends AppCompatActivity  implements IMovieItemC
         Utils.hideBlueBar(this);
         setContentView(R.layout.activity_list);
 
-        movieAdaptor = new MovieAdaptor(this);
-        recyclerView = findViewById(R.id.movieRcvList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(movieAdaptor);
+        setUpUiElements();
 
-        // LoadData data from .csv and parse to movieData objects
-        movieDataLoader = new MovieDataLoader();
-        ArrayList<MovieData> movieDataList = movieDataLoader.loadMovieData(this);
 
         // only created once, until destroyed
         vm = new ViewModelProvider(this).get(MultipleMovieDataViewModel.class);
-        vm.createMovieData(movieDataList);
+        // Only load data from .csv once
+        vm.createMovieData(this);
         vm.getMovieData().observe(this, new Observer<ArrayList<MovieData>>() {
             @Override
             public void onChanged(ArrayList<MovieData> movieDataArrayList) {
                 movieAdaptor.updateMovieList(vm.getMovieData().getValue());
             }
         });
+    }
+
+    private void setUpUiElements() {
+        exitButton = findViewById(R.id.buttonExit);
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        movieAdaptor = new MovieAdaptor(this);
+        recyclerView = findViewById(R.id.movieRcvList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(movieAdaptor);
     }
 
 

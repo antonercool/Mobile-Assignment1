@@ -1,19 +1,26 @@
 package dk.au.mad21fall.assignment1.au535993.ListActivity.Models;
 
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 
+import dk.au.mad21fall.assignment1.au535993.ListActivity.DataLoader.MovieDataLoader;
+
 
 public class MultipleMovieDataViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<MovieData>> movieDataList;
+    private MovieDataLoader movieDataLoader;
 
-    public void createMovieData(ArrayList<MovieData> movieDataArrayList){
+    public void createMovieData(Context context){
         if (movieDataList == null) {
+            movieDataLoader = new MovieDataLoader();
+            ArrayList<MovieData> movieArrayList = movieDataLoader.loadMovieData(context);
             movieDataList = new MutableLiveData<ArrayList<MovieData>>();
-            movieDataList.setValue(movieDataArrayList);
+            movieDataList.setValue(movieArrayList);
         }
     }
 
